@@ -33,7 +33,7 @@ public class LockedManager {
             return true;
         }
 
-        return lastLine.equals("lcoked for: " + player.getName());
+        return lastLine.equals("locked for: " + player.getName());
     }
 
     /**
@@ -79,7 +79,10 @@ public class LockedManager {
         lore.add("locked for: " + player.getName());
 
         meta.setLore(lore);
-        meta.setDisplayName(player.getDisplayName()+ " " + meta.getDisplayName());
+        meta.setDisplayName(
+            player.getDisplayName()+ " " +
+            (meta.hasDisplayName() ? meta.getDisplayName() : item.getType().toString())
+        );
 
         item.setItemMeta(meta);
 
