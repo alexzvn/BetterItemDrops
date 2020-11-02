@@ -1,0 +1,6 @@
+name: BetterDropItems
+version: "1.0-SNAPSHOT"
+author: Alexzvn
+main: dev.alexzvn.drop.better.BetterDropItems
+
+api-version: 1.16
