@@ -1,7 +1,9 @@
 package dev.alexzvn.drop.better.listeners;
 
+import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +16,8 @@ import dev.alexzvn.drop.better.damage.EntityDamaged;
 import dev.alexzvn.drop.better.damage.LockedManager;
 
 public class HandleDropItems implements Listener {
+
+    protected HashMap<String,Long> lastAlert = new HashMap<String,Long>();
     
     @EventHandler
     public void registerDropsForEntity(EntityDeathEvent event) {
@@ -40,15 +44,37 @@ public class HandleDropItems implements Listener {
             return;
         }
 
-        if (! LockedManager.check((Player) event.getEntity(), event.getItem().getItemStack())) {
-            event.setCancelled(true);
-            event.getEntity().sendMessage("this suff dont belong with you");
+        Player p = (Player) event.getEntity();
 
-            return;
+        if (! LockedManager.check(p, event.getItem().getItemStack())) {
+            event.setCancelled(true);
+            alert(p); return;
         }
 
         event.getItem().setItemStack(
             LockedManager.pull(event.getItem().getItemStack())
         );
+    }
+
+    protected boolean shouldAlert(Player player) {
+        Long time = lastAlert.get(player.getName());
+
+        if (time == null) {
+            return true;
+        }
+
+        return (time + 3000) < System.currentTimeMillis();
+    }
+
+    protected void alert(Player player) {
+        if (shouldAlert(player)) {
+            return;
+        }
+
+        player.sendMessage(
+            ChatColor.translateAlternateColorCodes('&', "&a This item is not your")
+        );
+
+        lastAlert.put(player.getName(), System.currentTimeMillis());
     }
 }
