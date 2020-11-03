@@ -81,7 +81,7 @@ public class LockedManager {
         meta.setLore(lore);
         meta.setDisplayName(
             player.getDisplayName()+ " " +
-            (meta.hasDisplayName() ? meta.getDisplayName() : item.getType().toString())
+            (meta.hasDisplayName() ? meta.getDisplayName() : item.getType().toString().toLowerCase().replace('_', ' '))
         );
 
         item.setItemMeta(meta);
